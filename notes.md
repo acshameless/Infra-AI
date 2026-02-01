@@ -64,32 +64,36 @@ H100 GPU 的带宽为 ~3.35 TB/s
 H200 
 GH200    
 
+与 H100 相比，H800 降低了 NVLink 互连带宽和 FP64 性能，同时保持 HBM 容量和带宽在大体上相似。
+    1. NVIDIAH100每块GPU的NVLink互连带宽约为900GB/s，而H800每块GPU约为400GB/s。
+    2. 3.35 TB/s 的显存带宽（SXM版本）或 2 TB/s 的显存带宽（PCIe版本）
+
+
 Blackwell 将两个 GPU 芯片模组封装在同一模块内的多芯片模块 (MCM) 设计，专用的高速 10 TB/s 晶片间互连NV‑HBI（高带宽接口）通信。
 B200 GPU上的显存为 192GB（可用约180GB，每个芯片96GB），8 个HBM3e，HBM3e 8层堆栈 DRAM芯片，每层3GB。    
 B300 GPU上的显存为 288GB                     
 
-GB200  ～900GB统一内存  CPU 内存 ~480GB LPDDR5X，带宽 ~500 TB/s    ~384 GB 的 HBM3e内存（每个 GPU 192GB），带宽 ～8TB/s
-GB300  ～900GB统一内存  CPU 内存 ~480GB LPDDR5X，带宽 ~500 TB/s    ~576 GB 的 HBM3e内存（每个 GPU 288GB），带宽 ～8TB/s
+GB200  ～900GB统一内存  CPU 内存 ~480GB LPDDR5X，带宽 ~500 GB/s    ~384 GB 的 HBM3e内存（每个 GPU 192GB），带宽 ～8TB/s
+GB300  ～900GB统一内存  CPU 内存 ~480GB LPDDR5X，带宽 ~500 GB/s    ~576 GB 的 HBM3e内存（每个 GPU 288GB），带宽 ～8TB/s
 
 
-GB200 NVL72 是一个自成体系的 72 GPU、1.44 exaFLOPS（FP4）、约 30 TB 内存的系统，机架功耗约为 120 到 132 kW。
+GB200 NVL72 是一个自成体系的 72 GPU、1.44 exaFLOPS（FP4），机架功耗约为 120 到 132 kW。
 每个 GPU 使用其 18 条 NVLink 链路连接到 18 个 NVSwitch 芯片，从而可以通过单个交换机形成路径。
-每个Blackwell GPU暴露18个NVLink5端口。单个 NVLink 端口 = 100 GB/s 双向，18 个端口全部接入 NVLink 网络 → **聚合双向带宽 = 18 × 100 GB/s = 1800 GB/s ≈ 1.8 TB/s**
+每个Blackwell GPU暴露18个NVLink5端口。单个 NVLink 端口 = 100 GB/s 双向，18 个端口全部接入 NVLink 网络 → 聚合双向带宽 = 18 × 100 GB/s = 1800 GB/s ≈ 1.8 TB/s，NVL72 域内提供约 130 TB/s 的总体 GPU 到 GPU 带宽。
+
+NVL72 中的每个计算节点约消耗 6 kW，18 个计算节点的总耗电为~110 kW。NVSwitch 托盘、网络交换机、空气冷却和水冷泵共计占用~20 kW，总计整个 NVL72 机架的耗电为 130 kW。
+
 42U 机架：18个GPU托盘 + 9个交换机托盘 + 上下各2个33kW电源托盘 + 顶上2个ipmi托盘。
 多机架通信带宽：每个计算节点配备四个 800 Gb/s 的网卡ConnectX-8，总计每节点 3.2 Tbit/s，每个机架约 57.6 Tbit/s。
 
 NVL72         ~13.5 TB of HBM (72 × 192 GB), and ~18 TB of DDR (36 × 480 GB).
 NVL72 Ultra   ~20.7 TB of HBM (72 × 288 GB), and ~18 TB of DDR (36 × 480 GB).
 
-每块 GPU 双向 1.8 TB/s 的完整NVLink 5 带宽相互通信（18 × 100 GB/s 链路），NVL72 域内提供约 130 TB/s 的总体 GPU 到 GPU 带宽。
-NVL72 中的每个计算节点包含两个 Grace Blackwell Superchip，两者合计约消耗 6 kW。18 个计算节点的总耗电为~110 kW。
-NVSwitch 托盘、网络交换机、空气冷却和水冷泵共计占用~20 kW，总计整个 NVL72 机架的耗电为 130 kW。
+
 液冷：粗略估算，在水温上升10–12°C时，需达到约150–200升/分钟的流量以散热约130 kW。
 NVL72 机架在装满硬件和冷却液时重约 3,000 磅（ 1.3–1.4 吨）。
 
-1. 与 H100 相比，它降低了 NVLink 互连带宽和 FP64 性能，同时保持 HBM 容量和带宽在大体上相似。
-    1. NVIDIAH100每块GPU的NVLink互连带宽约为900GB/s，而H800每块GPU约为400GB/s。
-    2. 3.35 TB/s 的显存带宽（SXM版本）或**2 TB/s**的显存带宽（PCIe版本）
+
 
 12. SM??
 17. 对于需要在网络内加速或卸载以处理存储、安全和控制平面任务的场景，会使用BlueField‑3DPU。
@@ -98,7 +102,6 @@ NVL72 机架在装满硬件和冷却液时重约 3,000 磅（ 1.3–1.4 吨）�
 22. DataCenterGPUManager(DCGM)，每个GPU的指标，例如GPU利用率百分比、显存使用、温度和NVLink吞吐量
 
 
-基于您提供的资料，Blackwell 架构及其系统（GB200/NVL72）的分类总结如下：
 
 ### 1. 核心芯片架构 (Blackwell GPU)
 *   **设计形态**：采用 **MCM（多芯片模块）** 设计，将两个 GPU 芯片模组封装在同一模块内。
@@ -113,9 +116,9 @@ NVL72 机架在装满硬件和冷却液时重约 3,000 磅（ 1.3–1.4 吨）�
 *   **GB200**：
     *   **总内存**：约 900GB。
     *   **组成**：~480GB LPDDR5X (CPU) + 384GB HBM3e (2x B200 GPU)。
-    *   **带宽**：HBM 带宽 ~8 TB/s；CPU 内存带宽 ~500 GB/s（注：原文为500 TB/s，此处修正为常规LPDDR5X带宽量级）。
+    *   **带宽**：HBM 带宽 ~8 TB/s；CPU 内存带宽 ~500 GB/s。
 *   **GB300**：
-    *   **总内存**：约 900GB。
+    *   **总内存**：约 1000GB。
     *   **组成**：~480GB LPDDR5X (CPU) + 576GB HBM3e (2x B300 GPU)。
     *   **带宽**：HBM 带宽 ~8 TB/s。
 
